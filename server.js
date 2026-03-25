@@ -1,4 +1,19 @@
+const { MongoClient } = require('mongodb');
 
+const uri = "mongodb+srv://chatuser:AutoGenerate@cluster0.nej0ton.mongodb.net/?appName=Cluster0";
+
+const client = new MongoClient(uri);
+
+async function connectDB() {
+  try {
+    await client.connect();
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB error:", err);
+  }
+}
+
+connectDB();
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
