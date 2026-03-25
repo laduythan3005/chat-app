@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Chat Notify</title>
+</head>
+<body>
+
+<h2>Chat</h2>
+<ul id="messages"></ul>
+<input id="input"/>
+<button onclick="send()">Send</button>
+
+<audio id="sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const name = prompt("Name:");
+socket.emit("join", name);
+
+if (Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
+function send(){
+  const val=document.getElementById("input").value;
+  socket.emit("message", val);
+}
+
+socket.on("message",(data)=>{
+  const li=document.createElement("li");
+  li.textContent=data.name+": "+data.msg;
+  document.getElementById("messages").appendChild(li);
+
+  document.getElementById("sound").play();
+
+  if(document.hidden){
+    new Notification(data.name, { body: data.msg });
+  }
+});
+</script>
+
+</body>
+</html>
